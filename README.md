@@ -76,6 +76,29 @@ ctest --test-dir Builds --output-on-failure
 
 For a universal macOS binary, add `-DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"` to the configure step.
 
+## Run RTSan locally (macOS)
+CI runs RealtimeSanitizer on Linux. To check locally on macOS, install Homebrew LLVM — Apple Clang doesn't ship the RTSan runtime:
+```bash
+brew install llvm
+```
+
+Configure a separate build dir using brew's clang and the realtime flags:
+```bash
+CC=/opt/homebrew/opt/llvm/bin/clang \
+CXX=/opt/homebrew/opt/llvm/bin/clang++ \
+cmake -B Builds-rtsan -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_C_FLAGS="-fsanitize=realtime" \
+  -DCMAKE_CXX_FLAGS="-fsanitize=realtime" \
+  -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=realtime"
+```
+
+Build and run:
+```bash
+cmake --build Builds-rtsan --target Tests
+ctest --test-dir Builds-rtsan --output-on-failure --verbose -E NOT_BUILT
+```
+
 ## Binary assets
 JUCE can embed arbitrary binary files (images, sounds, fonts) directly into each plugin format, exposing them at runtime via the `BinaryData::` namespace. The `assets/` folder ships with a placeholder `images/pamplejuce.png` (the original Pamplejuce template banner) so the binary-data target always has at least one input — replace it with your own when you fork.
 
