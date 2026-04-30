@@ -386,8 +386,10 @@ jobs:
           extensions: cpp,h
           # Skip build output, JUCE, submodules, cmake includes, and CI configs.
           # We only want tidy to look at our own source tree (source/, tests/,
-          # benchmarks/).
-          ignore: 'Builds|JUCE|modules|cmake|.github'
+          # benchmarks/). benchmarks/Benchmarks.cpp is textually #included into
+          # Catch2Main.cpp rather than compiled as its own TU, so it isn't in
+          # compile_commands.json — clang-tidy can't lint it standalone.
+          ignore: 'Builds|JUCE|modules|cmake|.github|benchmarks/Benchmarks.cpp'
 
       # Step exits 1 when tidy finds anything, but continue-on-error keeps the
       # job green — the step still shows a ⚠️ in the Actions UI and findings
