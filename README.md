@@ -37,11 +37,8 @@ Shortcut: editor-wide case-aware find-and-replace of `Starty` → `Spangle` and 
 ## Install dependencies
 ### macOS
 ```bash
-xcode-select --install                         # Apple's clang + git + make
 brew install cmake ninja clang-format          # Homebrew: https://brew.sh
 ```
-
-> Apple's bundled clang doesn't ship `clang-format` as a separate binary, so it's a separate brew package — needed by the pre-commit hook.
 
 ### Linux (Ubuntu / Debian)
 ```bash
@@ -53,11 +50,8 @@ sudo apt install -y \
 ```
 
 ### Windows
-Install in this order:
-1. **[Visual Studio 2022](https://visualstudio.microsoft.com/)** with the "Desktop development with C++" workload (provides MSVC + the Windows SDK; clang-format ships in the LLVM tools that come with it).
-2. **[CMake](https://cmake.org/download/)** (add to PATH during install).
-3. **[Ninja](https://github.com/ninja-build/ninja/releases)** on PATH (or `choco install ninja`).
-4. **[Git for Windows](https://git-scm.com/download/win)** if you don't already have it.
+- **[CMake](https://cmake.org/download/)** (add to PATH during install).
+- **[Ninja](https://github.com/ninja-build/ninja/releases)** on PATH (or `choco install ninja`).
 
 ## Install the pre-commit hook
 

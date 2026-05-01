@@ -2,6 +2,8 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 
+#include "../util/RealtimeAttributes.h"
+
 class PluginProcessor : public juce::AudioProcessor
 {
 public:
@@ -13,7 +15,7 @@ public:
 
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
 
-    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) noexcept [[clang::nonblocking]] override;
+    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) noexcept RTSAN_NONBLOCKING override;
 
     juce::AudioProcessorEditor* createEditor() override;
     bool                        hasEditor() const override;
