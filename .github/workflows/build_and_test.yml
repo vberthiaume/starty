@@ -46,6 +46,7 @@ jobs:
           - name: Windows
             os: windows-latest
             pluginval-binary: ./pluginval.exe
+            extra-flags: -G Ninja
 
     steps:
       # Setup MSVC toolchain and developer command prompt (Windows)

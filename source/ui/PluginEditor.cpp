@@ -18,10 +18,8 @@ PluginEditor::PluginEditor (PluginProcessor& p) : AudioProcessorEditor (&p), pro
         inspector->setVisible (true);
     };
 
-    setSize (w, h);
+    setSize (width, height);
 }
-
-PluginEditor::~PluginEditor() = default;
 
 void PluginEditor::paint (juce::Graphics& g)
 {
