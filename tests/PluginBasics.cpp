@@ -7,7 +7,12 @@ TEST_CASE ("Plugin instance", "[instance]")
 {
     PluginProcessor testPlugin;
 
-    SECTION ("name") { CHECK_THAT (testPlugin.getName().toStdString(), Catch::Matchers::Equals ("Starty")); }
+    // clang-format off
+    SECTION ("name")
+    {
+        CHECK_THAT (testPlugin.getName().toStdString(), Catch::Matchers::Equals ("Starty"));
+    }
+    // clang-format on
 }
 
 TEST_CASE ("processBlock realtime", "[rtsan]")
