@@ -37,25 +37,21 @@ Shortcut: editor-wide case-aware find-and-replace of `Starty` → `Spangle` and 
 ## Install dependencies
 ### macOS
 ```bash
-xcode-select --install         # Apple's clang + git + make
-brew install cmake ninja       # Homebrew: https://brew.sh
+brew install cmake ninja clang-format          # Homebrew: https://brew.sh
 ```
 
 ### Linux (Ubuntu / Debian)
 ```bash
 sudo apt update
 sudo apt install -y \
-  cmake ninja-build clang lld \
+  cmake ninja-build clang clang-format lld \
   libasound2-dev libx11-dev libxinerama-dev libxext-dev \
   libfreetype6-dev libwebkit2gtk-4.1-dev libglu1-mesa-dev
 ```
 
 ### Windows
-Install in this order:
-1. **[Visual Studio 2022](https://visualstudio.microsoft.com/)** with the "Desktop development with C++" workload (provides MSVC + the Windows SDK).
-2. **[CMake](https://cmake.org/download/)** (add to PATH during install).
-3. **[Ninja](https://github.com/ninja-build/ninja/releases)** on PATH (or `choco install ninja`).
-4. **[Git for Windows](https://git-scm.com/download/win)** if you don't already have it.
+- **[CMake](https://cmake.org/download/)** (add to PATH during install).
+- **[Ninja](https://github.com/ninja-build/ninja/releases)** on PATH (or `choco install ninja`).
 
 ## Install the pre-commit hook
 
@@ -73,6 +69,29 @@ ctest --test-dir Builds --output-on-failure
 ```
 
 For a universal macOS binary, add `-DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"` to the configure step.
+
+## Run RTSan locally (macOS)
+CI runs RealtimeSanitizer on Linux. To check locally on macOS, install Homebrew LLVM — Apple Clang doesn't ship the RTSan runtime:
+```bash
+brew install llvm
+```
+
+Configure a separate build dir using brew's clang and the realtime flags:
+```bash
+CC=/opt/homebrew/opt/llvm/bin/clang \
+CXX=/opt/homebrew/opt/llvm/bin/clang++ \
+cmake -B Builds-rtsan -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_C_FLAGS="-fsanitize=realtime" \
+  -DCMAKE_CXX_FLAGS="-fsanitize=realtime" \
+  -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=realtime"
+```
+
+Build and run:
+```bash
+cmake --build Builds-rtsan --target Tests
+ctest --test-dir Builds-rtsan --output-on-failure --verbose -E NOT_BUILT
+```
 
 ## Binary assets
 JUCE can embed arbitrary binary files (images, sounds, fonts) directly into each plugin format, exposing them at runtime via the `BinaryData::` namespace. The `assets/` folder ships with a placeholder `images/pamplejuce.png` (the original Pamplejuce template banner) so the binary-data target always has at least one input — replace it with your own when you fork.

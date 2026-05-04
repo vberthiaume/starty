@@ -6,6 +6,9 @@ Checks: >
   readability-*,
   cppcoreguidelines-*,
   -modernize-use-trailing-return-type,
-  -readability-magic-numbers
+  -readability-magic-numbers,
+  -readability-braces-around-statements,
+  -readability-identifier-length,
+  -readability-uppercase-literal-suffix
 HeaderFilterRegex: '(core|juce-app|qt-app|tests)/.*'
 FormatStyle: file
