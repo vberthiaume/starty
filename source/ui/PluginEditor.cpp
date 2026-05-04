@@ -21,7 +21,7 @@ PluginEditor::PluginEditor (PluginProcessor& p) : AudioProcessorEditor (&p), pro
     setSize (w, h);
 }
 
-PluginEditor::~PluginEditor() {}
+PluginEditor::~PluginEditor() = default;
 
 void PluginEditor::paint (juce::Graphics& g)
 {
