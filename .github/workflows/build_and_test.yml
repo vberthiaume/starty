@@ -350,7 +350,10 @@ jobs:
       - name: Test
         run: ctest --test-dir Builds --output-on-failure --verbose -E NOT_BUILT
 
-      # Coverage-only: gcovr converts Clang's .gcda/.gcno into a Cobertura XML.
+      # Coverage-only: gcovr emits an HTML report (uploaded as an artifact for
+      # drill-down) plus a plain-text summary that we paste into the run's
+      # Step Summary for at-a-glance numbers.
+      #
       # --filter 'source/' restricts the report to our code. JUCE module sources
       # get instrumented anyway (JUCE's CMake injects them as target_sources of
       # Tests, so they inherit Tests' compile flags including SharedCode's
@@ -360,22 +363,29 @@ jobs:
       # of the source/ filter.
       - name: Generate coverage report
         if: matrix.name == 'Coverage'
-        run: >-
-          gcovr --root .
-          --gcov-executable "llvm-cov gcov"
-          --gcov-ignore-errors=no_working_dir_found
-          --filter 'source/'
-          --xml-pretty
-          --output coverage.xml
-          --print-summary
+        run: |
+          mkdir -p coverage-html
+          gcovr --root . \
+            --gcov-executable "llvm-cov gcov" \
+            --gcov-ignore-errors=no_working_dir_found \
+            --filter 'source/' \
+            --html-details coverage-html/index.html \
+            --txt coverage.txt \
+            --print-summary
+          {
+            echo "## Coverage"
+            echo ''
+            echo '```'
+            cat coverage.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload coverage to Codecov
+      - name: Upload coverage HTML
         if: matrix.name == 'Coverage'
-        uses: codecov/codecov-action@v5
+        uses: actions/upload-artifact@v7
         with:
-          files: coverage.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
+          name: coverage-html
+          path: coverage-html/
 
   clang-tidy:
     name: clang-tidy
