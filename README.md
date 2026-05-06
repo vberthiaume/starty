@@ -2,11 +2,9 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 # Starty — JUCE plugin starter
-
 A starting point for a new JUCE audio-plugin project. Adds a CI sanitizer matrix (ASan, UBSan, TSan, RTSan), clang-tidy as a PR-comment bot, RTSan-aware attribute macros, and a clang-format pre-commit hook to the [Pamplejuce](https://github.com/sudara/pamplejuce) template. The placeholder plugin name is `Starty` — see [Rename](#rename-starty--your-plugin-name) for what to change when forking.
 
 ## Rename `Starty` → your plugin name
-
 Pick names. Example values for a hypothetical "Spangle" plugin by "Acme Audio":
 
 | Identifier | What it is | Example |
@@ -54,14 +52,13 @@ sudo apt install -y \
 - **[Ninja](https://github.com/ninja-build/ninja/releases)** on PATH (or `choco install ninja`).
 
 ## Install the pre-commit hook
-
 One-time, per clone. Refuses commits whose staged C/C++ files aren't clang-format clean (see `.githooks/pre-commit`):
 
 ```bash
 git config core.hooksPath .githooks
 ```
 
-## Build
+## Build (and run tests)
 ```bash
 cmake -B Builds -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 cmake --build Builds
@@ -93,20 +90,7 @@ cmake --build Builds-rtsan --target Tests
 ctest --test-dir Builds-rtsan --output-on-failure --verbose -E NOT_BUILT
 ```
 
-## Binary assets
-JUCE can embed arbitrary binary files (images, sounds, fonts) directly into each plugin format, exposing them at runtime via the `BinaryData::` namespace. The `assets/` folder ships with a placeholder `images/pamplejuce.png` (the original Pamplejuce template banner) so the binary-data target always has at least one input — replace it with your own when you fork.
-
-Drop new files anywhere inside `assets/`. Subdirectories are flattened, so don't reuse the same basename across folders — the symbols would collide. On the next build they're auto-bundled:
-
-```
-assets/images/logo.png   →  BinaryData::logo_png   +  BinaryData::logo_pngSize
-assets/sounds/click.wav  →  BinaryData::click_wav  +  BinaryData::click_wavSize
-```
-
-Wired up by `cmake/Assets.cmake` (a recursive glob). `juce_add_binary_data()` requires at least one source file, which is why we ship the placeholder rather than leaving the folder empty.
-
 ## CI
-
 Every push and PR triggers:
 - `build_and_test` — Linux/macOS/Windows, `pluginval` validation, artifact upload
 - `sanitizers` — ASan / UBSan / TSan / RTSan (clang-20 for the latter)

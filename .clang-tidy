@@ -10,5 +10,5 @@ Checks: >
   -readability-braces-around-statements,
   -readability-identifier-length,
   -readability-uppercase-literal-suffix
-HeaderFilterRegex: '(core|juce-app|qt-app|tests)/.*'
+HeaderFilterRegex: '(source|tests|benchmarks)/.*'
 FormatStyle: file

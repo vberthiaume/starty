@@ -9,7 +9,7 @@ class PluginProcessor : public juce::AudioProcessor
 {
 public:
     PluginProcessor();
-    ~PluginProcessor() override;
+    ~PluginProcessor() override = default;
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
@@ -20,14 +20,38 @@ public:
                        juce::MidiBuffer&         midiMessages) noexcept RTSAN_NONBLOCKING override;
 
     juce::AudioProcessorEditor* createEditor() override;
-    bool                        hasEditor() const override;
+    bool                        hasEditor() const override { return true; }
 
-    const juce::String getName() const override;
+    const juce::String getName() const override { return JucePlugin_Name; }
 
-    bool   acceptsMidi() const override;
-    bool   producesMidi() const override;
-    bool   isMidiEffect() const override;
-    double getTailLengthSeconds() const override;
+    bool acceptsMidi() const override
+    {
+#if JucePlugin_WantsMidiInput
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    bool producesMidi() const override
+    {
+#if JucePlugin_ProducesMidiOutput
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    bool isMidiEffect() const override
+    {
+#if JucePlugin_IsMidiEffect
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    double getTailLengthSeconds() const override { return 0.0; }
 
     int                getNumPrograms() override;
     int                getCurrentProgram() override;
