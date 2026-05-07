@@ -97,12 +97,6 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
     }
 }
 
-juce::AudioProcessorEditor* PluginProcessor::createEditor()
-{
-    // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-    return new PluginEditor (*this);
-}
-
 void PluginProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
@@ -118,8 +112,5 @@ void PluginProcessor::setStateInformation (const void* data, int sizeInBytes)
     juce::ignoreUnused (data, sizeInBytes);
 }
 
-// This creates new instances of the plugin..
-juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
-{
-    return new PluginProcessor(); //NOLINT
-}
+juce::AudioProcessorEditor*         PluginProcessor::createEditor() { return new PluginEditor (*this); } //NOLINT
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new PluginProcessor(); }               //NOLINT
