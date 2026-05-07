@@ -20,4 +20,4 @@ int main (int argc, char* argv[])
 #include "catch2/benchmark/catch_benchmark_all.hpp" // IWYU pragma: keep
 #include "catch2/catch_test_macros.hpp"             // IWYU pragma: keep
 
-#include "Benchmarks.cpp" // NOLINT
+#include "Benchmarks.cpp" // NOLINT(bugprone-suspicious-include) intentional unity-build pattern for Catch2 benchmarks
